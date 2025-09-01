@@ -16,6 +16,20 @@ class OpenAIAdapter(ModelAdapter):
         self.available_models = [
             ModelInfo(
                 provider=ModelProvider.OPENAI,
+                name="gpt-5-nano",
+                display_name="GPT-5 Nano",
+                description="Ultra-fast and efficient next-generation model",
+                max_tokens=8192
+            ),
+            ModelInfo(
+                provider=ModelProvider.OPENAI,
+                name="gpt-5-mini",
+                display_name="GPT-5 Mini",
+                description="Ultra-fast and efficient next-generation model",
+                max_tokens=8192
+            ),
+            ModelInfo(
+                provider=ModelProvider.OPENAI,
                 name="gpt-4-turbo-preview",
                 display_name="GPT-4 Turbo",
                 description="Latest GPT-4 model with improved performance",
@@ -72,15 +86,35 @@ class OpenAIAdapter(ModelAdapter):
                 span.set_attribute("chat.temperature", temperature)
                 if max_tokens is not None:
                     span.set_attribute("chat.max_tokens", max_tokens)
-                response = await self.client.chat.completions.create(
-                    model=model,
-                    messages=openai_messages,
-                    temperature=temperature,
-                    max_tokens=max_tokens
-                )
+                
+                # Prepare request parameters
+                request_params = {
+                    "model": model,
+                    "messages": openai_messages,
+                    "temperature": temperature
+                }
+                
+                # Handle max_tokens vs max_completion_tokens based on model
+                if max_tokens is not None:
+                    if model.startswith("gpt-5"):
+                        request_params["max_completion_tokens"] = max_tokens
+                    else:
+                        request_params["max_tokens"] = max_tokens
+                
+                response = await self.client.chat.completions.create(**request_params)
+            
+            # Handle reasoning models (GPT-5) response format
+            message = response.choices[0].message
+            content = message.content
+            reasoning = None
+            
+            # Extract reasoning for GPT-5 models
+            if model.startswith("gpt-5") and hasattr(message, 'reasoning') and message.reasoning:
+                reasoning = message.reasoning
             
             return {
-                "content": response.choices[0].message.content,
+                "content": content,
+                "reasoning": reasoning,
                 "usage": {
                     "prompt_tokens": response.usage.prompt_tokens,
                     "completion_tokens": response.usage.completion_tokens,

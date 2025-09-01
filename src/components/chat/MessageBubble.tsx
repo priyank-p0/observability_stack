@@ -2,6 +2,7 @@ import React from 'react';
 import { clsx } from 'clsx';
 import { User, Bot } from 'lucide-react';
 import type { ChatMessage } from '../../types/chat';
+import { ReasoningDisplay } from './ReasoningDisplay';
 
 interface MessageBubbleProps {
   message: ChatMessage;
@@ -55,6 +56,15 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
             {new Date(message.timestamp).toLocaleTimeString()}
           </span>
         </div>
+        
+        {/* Reasoning Display for Assistant Messages */}
+        {isAssistant && (
+          <ReasoningDisplay 
+            reasoning={message.reasoning || ''} 
+            isThinking={false}
+            showAfterResponse={message.model_used?.startsWith('gpt-5') || false}
+          />
+        )}
         
         <div
           className={clsx(

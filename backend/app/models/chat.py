@@ -26,6 +26,7 @@ class ChatMessage(BaseModel):
     content: str
     timestamp: datetime = Field(default_factory=datetime.utcnow)
     model_used: Optional[str] = None
+    reasoning: Optional[str] = None
 
 
 class ChatRequest(BaseModel):
@@ -34,7 +35,7 @@ class ChatRequest(BaseModel):
     conversation_id: Optional[str] = None
     model_provider: ModelProvider
     model_name: str
-    temperature: float = Field(default=0.7, ge=0.0, le=2.0)
+    temperature: float = Field(default=1.0, ge=0.0, le=2.0)
     max_tokens: Optional[int] = Field(default=1000, ge=1, le=4000)
     system_prompt: Optional[str] = None
 
@@ -46,6 +47,7 @@ class ChatResponse(BaseModel):
     model_used: str
     timestamp: datetime = Field(default_factory=datetime.utcnow)
     usage: Optional[Dict[str, Any]] = None
+    reasoning: Optional[str] = None
 
 
 class Conversation(BaseModel):

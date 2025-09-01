@@ -7,6 +7,7 @@ export interface ChatMessage {
   content: string;
   timestamp: string;
   model_used?: string;
+  reasoning?: string;
 }
 
 export interface ChatRequest {
@@ -29,6 +30,7 @@ export interface ChatResponse {
     completion_tokens: number;
     total_tokens: number;
   };
+  reasoning?: string;
 }
 
 export interface Conversation {

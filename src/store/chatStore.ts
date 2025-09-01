@@ -42,8 +42,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
   availableModels: [],
   settings: {
     model_provider: 'openai' as ModelProvider,
-    model_name: 'gpt-3.5-turbo',
-    temperature: 0.7,
+    model_name: 'gpt-5-nano',
+    temperature: 1,
     max_tokens: 1000,
     system_prompt: '',
   },

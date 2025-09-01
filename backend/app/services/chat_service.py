@@ -132,7 +132,8 @@ class ChatService:
                     role=ChatRole.ASSISTANT,
                     content=ai_response["content"],
                     timestamp=datetime.utcnow(),
-                    model_used=ai_response["model"]
+                    model_used=ai_response["model"],
+                    reasoning=ai_response.get("reasoning")
                 )
                 conversation.messages.append(ai_message)
             
@@ -146,14 +147,15 @@ class ChatService:
                     session_id=conversation.id
                 )
             
-                # Return response
-                return ChatResponse(
-                    message=ai_response["content"],
-                    conversation_id=conversation.id,
-                    model_used=ai_response["model"],
-                    timestamp=datetime.utcnow(),
-                    usage=ai_response.get("usage")
-                )
+                            # Return response
+            return ChatResponse(
+                message=ai_response["content"],
+                conversation_id=conversation.id,
+                model_used=ai_response["model"],
+                timestamp=datetime.utcnow(),
+                usage=ai_response.get("usage"),
+                reasoning=ai_response.get("reasoning")
+            )
             
         except Exception as e:
             raise Exception(f"Error in chat service: {str(e)}")

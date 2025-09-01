@@ -71,6 +71,10 @@ export const tracingApi = {
     const response = await api.get(`/api/tracing/traces/${traceId}`);
     return response.data;
   },
+  getSessionSummaries: async (): Promise<any[]> => {
+    const response = await api.get('/api/tracing/sessions/summary');
+    return response.data;
+  },
 };
 
 export default api;
