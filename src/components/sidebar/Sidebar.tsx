@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import { Settings, X, Activity } from 'lucide-react';
+import { Settings, X } from 'lucide-react';
 import { ConversationList } from './ConversationList';
 import { ModelSelector } from '../settings/ModelSelector';
-import { TracingPanel } from '../tracing/TracingPanel';
 import { Button } from '../ui/Button';
 import { useChatStore } from '../../store/chatStore';
 import { clsx } from 'clsx';
 
 export const Sidebar: React.FC = () => {
   const { sidebarOpen, toggleSidebar } = useChatStore();
-  const [activeTab, setActiveTab] = useState<'conversations' | 'settings' | 'tracing'>('conversations');
+  const [activeTab, setActiveTab] = useState<'conversations' | 'settings'>('conversations');
 
   return (
     <>
@@ -68,31 +67,15 @@ export const Sidebar: React.FC = () => {
             <Settings className="w-4 h-4 inline mr-1" />
             Settings
           </button>
-          <button
-            onClick={() => setActiveTab('tracing')}
-            className={clsx(
-              'flex-1 px-4 py-2 text-sm font-medium border-b-2 transition-colors',
-              activeTab === 'tracing'
-                ? 'border-blue-600 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
-            )}
-          >
-            <Activity className="w-4 h-4 inline mr-1" />
-            Tracing
-          </button>
         </div>
 
         {/* Content */}
         <div className="flex-1 overflow-hidden">
-          {activeTab === 'conversations' && <ConversationList />}
-          {activeTab === 'settings' && (
+          {activeTab === 'conversations' ? (
+            <ConversationList />
+          ) : (
             <div className="p-4 overflow-y-auto h-full">
               <ModelSelector />
-            </div>
-          )}
-          {activeTab === 'tracing' && (
-            <div className="overflow-hidden h-full">
-              <TracingPanel />
             </div>
           )}
         </div>
